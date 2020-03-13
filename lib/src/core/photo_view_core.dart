@@ -37,6 +37,7 @@ class PhotoViewCore extends StatefulWidget {
     @required this.basePosition,
     @required this.tightMode,
     @required this.filterQuality,
+    @required this.disableGestures,
   })  : customChild = null,
         super(key: key);
 
@@ -56,6 +57,7 @@ class PhotoViewCore extends StatefulWidget {
     @required this.basePosition,
     @required this.tightMode,
     @required this.filterQuality,
+    @required this.disableGestures,
   })  : imageProvider = null,
         gaplessPlayback = false,
         super(key: key);
@@ -80,6 +82,7 @@ class PhotoViewCore extends StatefulWidget {
   final bool tightMode;
 
   final FilterQuality filterQuality;
+  final bool disableGestures;
 
   @override
   State<StatefulWidget> createState() {
@@ -305,20 +308,25 @@ class PhotoViewCoreState extends State<PhotoViewCore>
               ),
               child: _buildHero(),
             );
+            final child = Container(
+              constraints: widget.tightMode
+                  ? BoxConstraints.tight(scaleBoundaries.childSize * scale)
+                  : null,
+              child: Center(
+                child: Transform(
+                  child: customChildLayout,
+                  transform: matrix,
+                  alignment: basePosition,
+                ),  
+              ),  
+              decoration: widget.backgroundDecoration ?? _defaultDecoration,
+            );
+            if (widget.disableGestures) {
+              return child;
+            }
+
             return PhotoViewGestureDetector(
-              child: Container(
-                constraints: widget.tightMode
-                    ? BoxConstraints.tight(scaleBoundaries.childSize * scale)
-                    : null,
-                child: Center(
-                  child: Transform(
-                    child: customChildLayout,
-                    transform: matrix,
-                    alignment: basePosition,
-                  ),
-                ),
-                decoration: widget.backgroundDecoration ?? _defaultDecoration,
-              ),
+              child: child,
               onDoubleTap: nextScaleState,
               onScaleStart: onScaleStart,
               onScaleUpdate: onScaleUpdate,
