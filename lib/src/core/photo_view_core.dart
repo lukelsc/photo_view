@@ -170,7 +170,7 @@ class PhotoViewCoreState extends State<PhotoViewCore>
 
     updateMultiple(
       scale: newScale,
-      position: clampPosition(position: delta * details.scale),
+      position: delta,
       rotation: _rotationBefore,
       rotationFocusPoint: details.focalPoint,
     );
