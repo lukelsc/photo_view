@@ -260,6 +260,7 @@ class PhotoView extends StatefulWidget {
     this.tightMode,
     this.filterQuality,
     this.disableGestures,
+    this.activeMode,
   })  : child = null,
         childSize = null,
         super(key: key);
@@ -292,6 +293,7 @@ class PhotoView extends StatefulWidget {
     this.tightMode,
     this.filterQuality,
     this.disableGestures,
+    this.activeMode,
   })  : loadFailedChild = null,
         imageProvider = null,
         gaplessPlayback = false,
@@ -389,6 +391,8 @@ class PhotoView extends StatefulWidget {
   // Removes gesture detector if `true`.
   // Useful when custom gesture detector is used in child widget.
   final bool disableGestures;
+
+  final String activeMode;
 
   @override
   State<StatefulWidget> createState() {
@@ -571,6 +575,7 @@ class _PhotoViewState extends State<PhotoView> {
       tightMode: widget.tightMode ?? false,
       filterQuality: widget.filterQuality ?? FilterQuality.none,
       disableGestures: widget.disableGestures ?? false,
+      activeMode: widget.activeMode ?? '',
     );
   }
 
@@ -627,6 +632,7 @@ class _PhotoViewState extends State<PhotoView> {
       tightMode: widget.tightMode ?? false,
       filterQuality: widget.filterQuality ?? FilterQuality.none,
       disableGestures: widget.disableGestures ?? false,
+      activeMode: widget.activeMode ?? '',
     );
   }
 

@@ -38,6 +38,7 @@ class PhotoViewCore extends StatefulWidget {
     @required this.tightMode,
     @required this.filterQuality,
     @required this.disableGestures,
+    @required this.activeMode,
   })  : customChild = null,
         super(key: key);
 
@@ -58,6 +59,7 @@ class PhotoViewCore extends StatefulWidget {
     @required this.tightMode,
     @required this.filterQuality,
     @required this.disableGestures,
+    @required this.activeMode,
   })  : imageProvider = null,
         gaplessPlayback = false,
         super(key: key);
@@ -83,6 +85,8 @@ class PhotoViewCore extends StatefulWidget {
 
   final FilterQuality filterQuality;
   final bool disableGestures;
+
+  final String activeMode;
 
   @override
   State<StatefulWidget> createState() {
@@ -149,12 +153,35 @@ class PhotoViewCoreState extends State<PhotoViewCore>
     );
   }
 
+  void cropOnScaleUpdate(ScaleUpdateDetails details) {
+    final double minScale = scaleBoundaries.minScale;
+    double newScale;
+    final _calculatedScale =  _scaleBefore * details.scale;
+    if( _calculatedScale > minScale){
+      newScale = _calculatedScale; 
+    } else {
+      newScale = minScale;
+    }
+    print(newScale);
+
+    final Offset delta = details.focalPoint - _normalizedPosition;
+
+    updateScaleStateFromNewScale(newScale);
+
+    updateMultiple(
+      scale: newScale,
+      position: clampPosition(position: delta * details.scale),
+      rotation: _rotationBefore,
+      rotationFocusPoint: details.focalPoint,
+    );
+  }
+
   void onScaleEnd(ScaleEndDetails details) {
     final double _scale = scale;
     final Offset _position = controller.position;
     final double maxScale = scaleBoundaries.maxScale;
     final double minScale = scaleBoundaries.minScale;
-
+   
     //animate back to maxScale if gesture exceeded the maxScale specified
     if (_scale > maxScale) {
       final double scaleComebackRatio = maxScale / _scale;
@@ -323,6 +350,31 @@ class PhotoViewCoreState extends State<PhotoViewCore>
             );
             if (widget.disableGestures) {
               return child;
+            }
+
+            if(widget.activeMode == "rotation"){
+              return child;
+            }
+
+            //Fixed position to scale
+            
+            //No scale down when scale size already in the min value
+            //done
+            //disable rotation during zoom in and zoom out
+            //done
+            if(widget.activeMode == "crop"){
+              print("crop");
+              //if()
+              return PhotoViewGestureDetector(
+              child: child,
+              onDoubleTap: nextScaleState,
+              onScaleStart: onScaleStart,
+              onScaleUpdate: cropOnScaleUpdate,
+              onScaleEnd: onScaleEnd,
+              hitDetector: this,
+              onTapUp: widget.onTapUp == null ? null : onTapUp,
+              onTapDown: widget.onTapDown == null ? null : onTapDown,
+            );
             }
 
             return PhotoViewGestureDetector(
