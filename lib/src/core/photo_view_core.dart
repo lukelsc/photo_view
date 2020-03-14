@@ -351,20 +351,12 @@ class PhotoViewCoreState extends State<PhotoViewCore>
             if (widget.disableGestures) {
               return child;
             }
-
-            if(widget.activeMode == "rotation"){
+            print(widget.activeMode);
+            if(widget.activeMode == 'rotation'){
               return child;
             }
 
-            //Fixed position to scale
-            
-            //No scale down when scale size already in the min value
-            //done
-            //disable rotation during zoom in and zoom out
-            //done
             if(widget.activeMode == "crop"){
-              print("crop");
-              //if()
               return PhotoViewGestureDetector(
               child: child,
               onDoubleTap: nextScaleState,
