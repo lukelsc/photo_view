@@ -164,7 +164,7 @@ class PhotoViewCoreState extends State<PhotoViewCore>
     }
     print(newScale);
 
-    final Offset delta = details.focalPoint - _normalizedPosition;
+    final Offset delta = Offset.zero;
 
     updateScaleStateFromNewScale(newScale);
 
