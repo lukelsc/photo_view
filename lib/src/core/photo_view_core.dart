@@ -157,7 +157,7 @@ class PhotoViewCoreState extends State<PhotoViewCore>
     final double minScale = scaleBoundaries.minScale;
     double newScale;
     final _calculatedScale =  _scaleBefore * details.scale;
-    if( _calculatedScale > minScale){
+    if( _calculatedScale >= minScale){
       newScale = _calculatedScale; 
     } else {
       newScale = minScale;
